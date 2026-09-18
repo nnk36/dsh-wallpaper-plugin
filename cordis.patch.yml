@@ -1,0 +1,19 @@
+# ============================================================================
+# dsh-wallpaper —— DSH bundle patch
+# ============================================================================
+# 常驻插件的挂载声明：DSH 启动时按 bundle 层栈叠加各插件 patch，
+# 本文件把背景底图的宿主行（持久化路由）插入 Web profile 的配置树。
+#
+# 浏览器半不在这里挂载：它由 package.json 的 dsh.client + exports["./client"]
+# 交给 clientModules 组合进页面，和第一方 dsh-client-ui-* 插件走同一条路。
+#
+# 安装：
+#   dsh plugin --profile web add link:/root/dsh-wallpaper
+#   （并把 dsh-wallpaper 加进 profile package.json 的 dsh.profile.bundles）
+#
+# 这一行只注册两条路由，且把 webServer 声明为模块级 inject —— 它是硬依赖，
+# Cordis 会等服务就绪后再激活本行。不要改成 ctx.get('webServer')：实测那样会在
+# webServer 提供者之前激活，拿到 undefined 后静默早退，路由不会注册。
+- insert:
+    - id: dsh-wallpaper
+      name: 'dsh-wallpaper'
